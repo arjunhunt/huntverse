@@ -1,4 +1,7 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+if (!process.env.JWT_SECRET) process.env.JWT_SECRET = 'supersecret_huntverse_key_2026';
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -20,6 +23,9 @@ app.use(express.json());
 
 const seedDB = require('./seed');
 
+const libDir = path.join(__dirname, 'lib');
+process.env.LD_LIBRARY_PATH = process.env.LD_LIBRARY_PATH ? `${libDir}:${process.env.LD_LIBRARY_PATH}` : libDir;
+
 // Connect to MongoDB
 const connectDB = async () => {
   try {
@@ -29,7 +35,12 @@ const connectDB = async () => {
   } catch (err) {
     console.log('Failed to connect to local MongoDB. Starting in-memory MongoDB...');
     const { MongoMemoryServer } = require('mongodb-memory-server');
-    const mongoServer = await MongoMemoryServer.create();
+    const mongoServer = await MongoMemoryServer.create({
+      binary: {
+        version: '4.4.18',
+        os: { os: 'ubuntu', dist: 'Ubuntu 20.04' }
+      }
+    });
     const mongoUri = mongoServer.getUri();
     await mongoose.connect(mongoUri);
     console.log('MongoDB Connected to In-Memory Server');
