@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Huntverse</string>
+    <string name="title_activity_main">Huntverse</string>
+    <string name="package_name">com.huntverse.app</string>
+    <string name="custom_url_scheme">com.huntverse.app</string>
+</resources>
